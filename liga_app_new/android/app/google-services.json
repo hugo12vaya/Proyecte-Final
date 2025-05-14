@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "245376294300",
+    "project_id": "databasefutbol-8b32b",
+    "storage_bucket": "databasefutbol-8b32b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:245376294300:android:71e8db3d13431b92d23c59",
+        "android_client_info": {
+          "package_name": "com.codigocorrecto.liga_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRMjmWFHYwg9LEhN9bN39tyD3ClqhlQiU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:245376294300:android:ffa7f4954ccd6f60d23c59",
+        "android_client_info": {
+          "package_name": "com.codigocorrecto.liga_app_new"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRMjmWFHYwg9LEhN9bN39tyD3ClqhlQiU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
