@@ -1399,38 +1399,46 @@ class _PartidosScreenState extends State<PartidosScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              match['matchLocation'] == 'Casa'
-                                                  ? match['leagueName']
-                                                  : match['opponent'],
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                match['matchLocation'] == 'Casa'
+                                                    ? match['leagueName']
+                                                    : match['opponent'],
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
                                               ),
-                                            ),
-                                            SizedBox(height: 8),
-                                            Text(
-                                              match['matchLocation'] == 'Casa'
-                                                  ? match['opponent']
-                                                  : match['leagueName'],
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
+                                              SizedBox(height: 8),
+                                              Text(
+                                                match['matchLocation'] == 'Casa'
+                                                    ? match['opponent']
+                                                    : match['leagueName'],
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
+                                        SizedBox(width: 8),
                                         Column(
                                           children: [
                                             Container(
-                                              width: 25,
-                                              height: 25,
+                                              width:
+                                                  28, // Ajusta el ancho si es necesario
+                                              height: 28,
                                               decoration: BoxDecoration(
                                                 color: Colors.white.withOpacity(
                                                   0.1,
@@ -1454,8 +1462,8 @@ class _PartidosScreenState extends State<PartidosScreen> {
                                             ),
                                             SizedBox(height: 8),
                                             Container(
-                                              width: 25,
-                                              height: 25,
+                                              width: 28,
+                                              height: 28,
                                               decoration: BoxDecoration(
                                                 color: Colors.white.withOpacity(
                                                   0.1,

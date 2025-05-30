@@ -200,13 +200,17 @@ class _EstadisticasScreenState extends State<EstadisticasScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: Text(
           'Ingresar Estadísticas',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white,
+          ),
         ),
-        backgroundColor: Colors.blueGrey.shade900,
         centerTitle: true,
+        backgroundColor: Colors.blueGrey.shade900,
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Container(
         decoration: BoxDecoration(

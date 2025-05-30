@@ -153,10 +153,15 @@ class _MultasScreenState extends State<MultasScreen> {
       appBar: AppBar(
         title: Text(
           'Multas',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white,
+          ),
         ),
-        backgroundColor: Colors.blueGrey.shade900,
         centerTitle: true,
+        backgroundColor: Colors.blueGrey.shade900,
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Container(
         color: Colors.blueGrey.shade100,

@@ -3,26 +3,30 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'league_screen.dart';
 
+// Pantalla principal després d'iniciar sessió
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // Llista de lligues de l'usuari
   final List<Map<String, String>> _leagues = [];
+  // Referència a Firestore i Auth
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
     super.initState();
-    _fetchUserLeagues();
+    _fetchUserLeagues(); // Carrega les lligues de l'usuari al començar
   }
 
+  // Obté les lligues on l'usuari és admin o membre
   Future<void> _fetchUserLeagues() async {
-    // Método que realiza llamadas a Firebase Authentication y Firestore
-    final user = _auth.currentUser; // Firebase Auth
+    final user = _auth.currentUser; // Usuari autenticat
     if (user == null) {
+      // Mostra missatge si no hi ha usuari
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Usuario no autenticado')));
@@ -30,8 +34,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     try {
-      final querySnapshot =
-          await _firestore.collection('leagues').get(); // Firebase Firestore
+      // Obté totes les lligues de Firestore
+      final querySnapshot = await _firestore.collection('leagues').get();
+      // Filtra les lligues on l'usuari és admin o membre
       final userLeagues = querySnapshot.docs.where((doc) {
         final data = doc.data();
         return data['admin'] == user.uid ||
@@ -43,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ));
       });
 
+      // Actualitza la llista de lligues a l'estat
       setState(() {
         _leagues.clear();
         _leagues.addAll(
@@ -59,12 +65,14 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       });
     } catch (e) {
+      // Mostra error si falla la càrrega
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Error al cargar las ligas: $e')));
     }
   }
 
+  // Mostra el diàleg per crear una nova lliga
   void _showCreateLeagueDialog() {
     final TextEditingController nameController = TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
@@ -98,6 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 SizedBox(height: 16),
+                // Camp per al nom de la lliga
                 TextField(
                   controller: nameController,
                   decoration: InputDecoration(
@@ -110,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 SizedBox(height: 16),
+                // Camp per a la descripció de la lliga
                 TextField(
                   controller: descriptionController,
                   decoration: InputDecoration(
@@ -122,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 SizedBox(height: 16),
+                // Botons per cancel·lar o crear la lliga
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -137,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ElevatedButton(
                       onPressed: () async {
                         if (nameController.text.isNotEmpty) {
-                          final user = _auth.currentUser; // Firebase Auth
+                          final user = _auth.currentUser;
                           if (user == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Usuario no autenticado')),
@@ -153,10 +164,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           };
 
                           try {
-                            // Llamada a Firebase Firestore para crear una liga
-                            await _firestore
-                                .collection('leagues')
-                                .add(league); // Firebase Firestore
+                            // Desa la lliga a Firestore
+                            await _firestore.collection('leagues').add(league);
                             setState(() {
                               _leagues.add({
                                 'name': nameController.text,
@@ -202,6 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Mostra el diàleg per unir-se a una lliga existent
   void _showJoinLeagueDialog() {
     final TextEditingController leagueIdController = TextEditingController();
     String selectedRole = 'Jugador';
@@ -235,6 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 SizedBox(height: 16),
+                // Camp per introduir l'ID de la lliga
                 TextField(
                   controller: leagueIdController,
                   decoration: InputDecoration(
@@ -247,6 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 SizedBox(height: 16),
+                // Selector de rol dins la lliga
                 DropdownButtonFormField<String>(
                   value: selectedRole,
                   items:
@@ -272,6 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 SizedBox(height: 16),
+                // Botons per cancel·lar o unir-se a la lliga
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -287,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ElevatedButton(
                       onPressed: () async {
                         if (leagueIdController.text.isNotEmpty) {
-                          final user = _auth.currentUser; // Firebase Auth
+                          final user = _auth.currentUser;
                           if (user == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Usuario no autenticado')),
@@ -296,12 +309,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
 
                           try {
-                            // Llamada a Firebase Firestore para unirse a una liga
+                            // Busca la lliga per ID
                             final leagueDoc =
                                 await _firestore
                                     .collection('leagues')
                                     .doc(leagueIdController.text)
-                                    .get(); // Firebase Firestore
+                                    .get();
 
                             if (!leagueDoc.exists) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -310,6 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               return;
                             }
 
+                            // Afegeix l'usuari com a membre de la lliga
                             await _firestore
                                 .collection('leagues')
                                 .doc(leagueIdController.text)
@@ -317,7 +331,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   'members': FieldValue.arrayUnion([
                                     {'uid': user.uid, 'role': selectedRole},
                                   ]),
-                                }); // Firebase Firestore
+                                });
 
                             Navigator.of(context).pop();
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -362,6 +376,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Construcció de la interfície principal
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -385,6 +400,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
         ),
       ),
+      // Menú lateral (drawer)
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -429,6 +445,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           child: Column(
             children: [
+              // Mostra les lligues de l'usuari o un missatge si no n'hi ha
               Expanded(
                 flex: 6,
                 child:
@@ -471,17 +488,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
               ),
               SizedBox(height: 16),
+              // Botó per crear una nova lliga
               _buildHorizontalCard(
                 title: 'Crear Liga',
-                subtitle: 'Crea una nueva liga',
+                subtitle: 'Crea una nova lliga',
                 icon: Icons.add_circle,
                 onTap: _showCreateLeagueDialog,
                 isSmall: true,
               ),
               SizedBox(height: 16),
+              // Botó per unir-se a una lliga existent
               _buildHorizontalCard(
                 title: 'Unirse a Liga',
-                subtitle: 'Únete a una liga existente',
+                subtitle: 'Únete a una lliga existent',
                 icon: Icons.group_add,
                 onTap: _showJoinLeagueDialog,
                 isSmall: true,
@@ -493,6 +512,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Widget per mostrar una targeta de lliga gran
   Widget _buildCard({
     required String title,
     required String subtitle,
@@ -537,6 +557,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Widget per mostrar una targeta horitzontal (crear o unir-se a lliga)
   Widget _buildHorizontalCard({
     required String title,
     required String subtitle,
@@ -544,28 +565,39 @@ class _HomeScreenState extends State<HomeScreen> {
     required VoidCallback onTap,
     bool isSmall = false,
   }) {
+    // Retorna una Card amb estil horitzontal i un botó d'acció
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      elevation: 6,
-      shadowColor: Colors.blueAccent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ), // Cantonades arrodonides
+      elevation: 6, // Ombra de la targeta
+      shadowColor: Colors.blueAccent, // Color de l'ombra
       child: InkWell(
-        onTap: onTap,
+        onTap: onTap, // Acció quan es toca la targeta
         child: Container(
           width: double.infinity,
-          padding: EdgeInsets.all(isSmall ? 12.0 : 16.0),
+          padding: EdgeInsets.all(
+            isSmall ? 12.0 : 16.0,
+          ), // Mida del padding segons si és petita
           child: Row(
             children: [
+              // Icona principal de la targeta (crear o unir-se)
               Icon(
                 icon,
-                size: isSmall ? 36 : 40,
+                size:
+                    isSmall
+                        ? 36
+                        : 40, // Mida de la icona segons mida de la targeta
                 color: Colors.blueGrey.shade900,
               ),
-              SizedBox(width: 16),
+              SizedBox(width: 16), // Espai entre la icona i el text
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start, // Text alineat a l'esquerra
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    // Títol de la targeta (ex: "Crear Liga")
                     Text(
                       title,
                       style: TextStyle(
@@ -574,7 +606,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.blueGrey.shade900,
                       ),
                     ),
-                    SizedBox(height: 5),
+                    SizedBox(height: 5), // Espai entre títol i subtítol
+                    // Subtítol de la targeta (ex: "Crea una nova lliga")
                     Text(
                       subtitle,
                       style: TextStyle(

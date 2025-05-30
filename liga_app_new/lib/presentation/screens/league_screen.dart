@@ -8,6 +8,7 @@ import 'rankings_screen.dart';
 import 'forma_screen.dart';
 import 'multas_screen.dart';
 import 'videos_screen.dart';
+import 'inicio_screen.dart';
 
 class LeagueScreen extends StatefulWidget {
   final Map<String, String> league;
@@ -266,7 +267,9 @@ class _LeagueScreenState extends State<LeagueScreen> {
         ),
       ),
       body:
-          _selectedIndex == 1
+          _selectedIndex == 0
+              ? InicioScreen()
+              : _selectedIndex == 1
               ? PartidosScreen()
               : _selectedIndex == 2
               ? ClasificacionScreen()
